@@ -24,50 +24,51 @@ import org.axonframework.samples.bank.api.banktransfer.MarkBankTransferCompleted
 import org.axonframework.samples.bank.api.banktransfer.MarkBankTransferFailedCommand;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class BankTransferTest {
 
-    private FixtureConfiguration<BankTransfer> fixture;
+  private FixtureConfiguration<BankTransfer> fixture;
 
-    @Before
-    public void setUp() throws Exception {
-        fixture = new AggregateTestFixture<>(BankTransfer.class);
-    }
+  @Before
+  public void setUp() throws Exception {
+    fixture = new AggregateTestFixture<>(BankTransfer.class);
+  }
 
-    @Test
-    public void testCreateBankTransfer() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
+  @Test
+  public void testCreateBankTransfer() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
 
-        fixture.givenNoPriorActivity()
-               .when(new CreateBankTransferCommand(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
-               .expectEvents(new BankTransferCreatedEvent(bankTransferId,
-                                                          sourceBankAccountId,
-                                                          destinationBankAccountId,
-                                                          20));
-    }
+    fixture.givenNoPriorActivity()
+        .when(new CreateBankTransferCommand(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
+        .expectEvents(new BankTransferCreatedEvent(bankTransferId,
+            sourceBankAccountId,
+            destinationBankAccountId,
+            20));
+  }
 
-    @Test
-    public void testMarkBankTransferCompleted() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
+  @Test
+  public void testMarkBankTransferCompleted() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
 
-        fixture.given(new BankTransferCreatedEvent(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
-               .when(new MarkBankTransferCompletedCommand(bankTransferId))
-               .expectEvents(new BankTransferCompletedEvent(bankTransferId));
-    }
+    fixture.given(new BankTransferCreatedEvent(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
+        .when(new MarkBankTransferCompletedCommand(bankTransferId))
+        .expectEvents(new BankTransferCompletedEvent(bankTransferId));
+  }
 
-    @Test
-    public void testMarkBankTransferFailed() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
+  @Test
+  public void testMarkBankTransferFailed() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
 
-        fixture.given(new BankTransferCreatedEvent(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
-               .when(new MarkBankTransferFailedCommand(bankTransferId))
-               .expectEvents(new BankTransferFailedEvent(bankTransferId));
-    }
+    fixture.given(new BankTransferCreatedEvent(bankTransferId, sourceBankAccountId, destinationBankAccountId, 20))
+        .when(new MarkBankTransferFailedCommand(bankTransferId))
+        .expectEvents(new BankTransferFailedEvent(bankTransferId));
+  }
 }

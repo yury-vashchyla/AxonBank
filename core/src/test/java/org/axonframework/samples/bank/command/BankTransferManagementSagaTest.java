@@ -13,128 +13,129 @@ import org.axonframework.samples.bank.api.banktransfer.MarkBankTransferCompleted
 import org.axonframework.samples.bank.api.banktransfer.MarkBankTransferFailedCommand;
 import org.axonframework.test.saga.FixtureConfiguration;
 import org.axonframework.test.saga.SagaTestFixture;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class BankTransferManagementSagaTest {
 
-    private FixtureConfiguration testFixture;
+  private FixtureConfiguration testFixture;
 
-    @Before
-    public void setUp() throws Exception {
-        testFixture = new SagaTestFixture<>(BankTransferManagementSaga.class);
-    }
+  @Before
+  public void setUp() throws Exception {
+    testFixture = new SagaTestFixture<>(BankTransferManagementSaga.class);
+  }
 
-    @Test
-    public void testBankTransferCreated() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testBankTransferCreated() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenNoPriorActivity()
-                   .whenAggregate(bankTransferId).publishes(new BankTransferCreatedEvent(bankTransferId,
-                                                                                         sourceBankAccountId,
-                                                                                         destinationBankAccountId,
-                                                                                         amountOfMoneyToTransfer))
-                   .expectActiveSagas(1)
-                   .expectDispatchedCommands(new DebitSourceBankAccountCommand(sourceBankAccountId,
-                                                                               bankTransferId,
-                                                                               amountOfMoneyToTransfer));
-    }
+    testFixture.givenNoPriorActivity()
+        .whenAggregate(bankTransferId).publishes(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .expectActiveSagas(1)
+        .expectDispatchedCommands(new DebitSourceBankAccountCommand(sourceBankAccountId,
+            bankTransferId,
+            amountOfMoneyToTransfer));
+  }
 
-    @Test
-    public void testSourceBankAccountNotFound() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testSourceBankAccountNotFound() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
-                                                                                          sourceBankAccountId,
-                                                                                          destinationBankAccountId,
-                                                                                          amountOfMoneyToTransfer))
-                   .whenPublishingA(new SourceBankAccountNotFoundEvent(bankTransferId))
-                   .expectActiveSagas(0)
-                   .expectDispatchedCommands(new MarkBankTransferFailedCommand(bankTransferId));
-    }
+    testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .whenPublishingA(new SourceBankAccountNotFoundEvent(bankTransferId))
+        .expectActiveSagas(0)
+        .expectDispatchedCommands(new MarkBankTransferFailedCommand(bankTransferId));
+  }
 
-    @Test
-    public void testSourceBankAccountDebitRejected() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testSourceBankAccountDebitRejected() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
-                                                                                          sourceBankAccountId,
-                                                                                          destinationBankAccountId,
-                                                                                          amountOfMoneyToTransfer))
-                   .whenAggregate(sourceBankAccountId)
-                   .publishes(new SourceBankAccountDebitRejectedEvent(bankTransferId))
-                   .expectActiveSagas(0)
-                   .expectDispatchedCommands(new MarkBankTransferFailedCommand(bankTransferId));
-    }
+    testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .whenAggregate(sourceBankAccountId)
+        .publishes(new SourceBankAccountDebitRejectedEvent(bankTransferId))
+        .expectActiveSagas(0)
+        .expectDispatchedCommands(new MarkBankTransferFailedCommand(bankTransferId));
+  }
 
-    @Test
-    public void testSourceBankAccountDebited() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testSourceBankAccountDebited() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
-                                                                                          sourceBankAccountId,
-                                                                                          destinationBankAccountId,
-                                                                                          amountOfMoneyToTransfer))
-                   .whenAggregate(sourceBankAccountId).publishes(new SourceBankAccountDebitedEvent(sourceBankAccountId,
-                                                                                                   amountOfMoneyToTransfer,
-                                                                                                   bankTransferId))
-                   .expectActiveSagas(1)
-                   .expectDispatchedCommands(new CreditDestinationBankAccountCommand(destinationBankAccountId,
-                                                                                     bankTransferId,
-                                                                                     amountOfMoneyToTransfer));
-    }
+    testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .whenAggregate(sourceBankAccountId).publishes(new SourceBankAccountDebitedEvent(sourceBankAccountId,
+        amountOfMoneyToTransfer,
+        bankTransferId))
+        .expectActiveSagas(1)
+        .expectDispatchedCommands(new CreditDestinationBankAccountCommand(destinationBankAccountId,
+            bankTransferId,
+            amountOfMoneyToTransfer));
+  }
 
-    @Test
-    public void testDestinationBankAccountNotFound() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testDestinationBankAccountNotFound() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
-                                                                                          sourceBankAccountId,
-                                                                                          destinationBankAccountId,
-                                                                                          amountOfMoneyToTransfer))
-                   .andThenAggregate(sourceBankAccountId).published(new SourceBankAccountDebitedEvent(
-                sourceBankAccountId, amountOfMoneyToTransfer, bankTransferId))
-                   .whenPublishingA(new DestinationBankAccountNotFoundEvent(bankTransferId))
-                   .expectActiveSagas(0)
-                   .expectDispatchedCommands(new ReturnMoneyOfFailedBankTransferCommand(sourceBankAccountId,
-                                                                                        amountOfMoneyToTransfer),
-                                             new MarkBankTransferFailedCommand(bankTransferId));
-    }
+    testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .andThenAggregate(sourceBankAccountId).published(new SourceBankAccountDebitedEvent(
+        sourceBankAccountId, amountOfMoneyToTransfer, bankTransferId))
+        .whenPublishingA(new DestinationBankAccountNotFoundEvent(bankTransferId))
+        .expectActiveSagas(0)
+        .expectDispatchedCommands(new ReturnMoneyOfFailedBankTransferCommand(sourceBankAccountId,
+                amountOfMoneyToTransfer),
+            new MarkBankTransferFailedCommand(bankTransferId));
+  }
 
-    @Test
-    public void testDestinationBankAccountCredited() throws Exception {
-        String bankTransferId = "bankTransferId";
-        String sourceBankAccountId = "sourceBankAccountId";
-        String destinationBankAccountId = "destinationBankAccountId";
-        long amountOfMoneyToTransfer = 40;
+  @Test
+  public void testDestinationBankAccountCredited() throws Exception {
+    String bankTransferId = "bankTransferId";
+    String sourceBankAccountId = "sourceBankAccountId";
+    String destinationBankAccountId = "destinationBankAccountId";
+    long amountOfMoneyToTransfer = 40;
 
-        testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
-                                                                                          sourceBankAccountId,
-                                                                                          destinationBankAccountId,
-                                                                                          amountOfMoneyToTransfer))
-                   .andThenAggregate(sourceBankAccountId).published(new SourceBankAccountDebitedEvent(
-                sourceBankAccountId,
-                amountOfMoneyToTransfer,
-                bankTransferId))
-                   .whenAggregate(destinationBankAccountId).publishes(new DestinationBankAccountCreditedEvent(
-                destinationBankAccountId,
-                amountOfMoneyToTransfer,
-                bankTransferId))
-                   .expectActiveSagas(0)
-                   .expectDispatchedCommands(new MarkBankTransferCompletedCommand(bankTransferId));
-    }
+    testFixture.givenAggregate(bankTransferId).published(new BankTransferCreatedEvent(bankTransferId,
+        sourceBankAccountId,
+        destinationBankAccountId,
+        amountOfMoneyToTransfer))
+        .andThenAggregate(sourceBankAccountId).published(new SourceBankAccountDebitedEvent(
+        sourceBankAccountId,
+        amountOfMoneyToTransfer,
+        bankTransferId))
+        .whenAggregate(destinationBankAccountId).publishes(new DestinationBankAccountCreditedEvent(
+        destinationBankAccountId,
+        amountOfMoneyToTransfer,
+        bankTransferId))
+        .expectActiveSagas(0)
+        .expectDispatchedCommands(new MarkBankTransferCompletedCommand(bankTransferId));
+  }
 }

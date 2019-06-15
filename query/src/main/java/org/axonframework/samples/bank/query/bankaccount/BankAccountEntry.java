@@ -23,52 +23,52 @@ import javax.persistence.Id;
 @Entity
 public class BankAccountEntry {
 
-    @Id
-    @GeneratedValue
-    private long id;
-    private String axonBankAccountId;
-    private long balance;
-    private long overdraftLimit;
+  @Id
+  @GeneratedValue
+  private long id;
+  private String axonBankAccountId;
+  private long balance;
+  private long overdraftLimit;
 
-    @SuppressWarnings("unused")
-    public BankAccountEntry() {
-    }
+  @SuppressWarnings("unused")
+  public BankAccountEntry() {
+  }
 
-    public BankAccountEntry(String axonBankAccountId, long balance, long overdraftLimit) {
-        this.axonBankAccountId = axonBankAccountId;
-        this.balance = balance;
-        this.overdraftLimit = overdraftLimit;
-    }
+  public BankAccountEntry(String axonBankAccountId, long balance, long overdraftLimit) {
+    this.axonBankAccountId = axonBankAccountId;
+    this.balance = balance;
+    this.overdraftLimit = overdraftLimit;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public String getAxonBankAccountId() {
-        return axonBankAccountId;
-    }
+  public String getAxonBankAccountId() {
+    return axonBankAccountId;
+  }
 
-    public void setAxonBankAccountId(String axonBankAccountId) {
-        this.axonBankAccountId = axonBankAccountId;
-    }
+  public void setAxonBankAccountId(String axonBankAccountId) {
+    this.axonBankAccountId = axonBankAccountId;
+  }
 
-    public long getBalance() {
-        return balance;
-    }
+  public long getBalance() {
+    return balance;
+  }
 
-    public void setBalance(long balance) {
-        this.balance = balance;
-    }
+  public void setBalance(long balance) {
+    this.balance = balance;
+  }
 
-    public long getOverdraftLimit() {
-        return overdraftLimit;
-    }
+  public long getOverdraftLimit() {
+    return overdraftLimit;
+  }
 
-    public void setOverdraftLimit(long overdraftLimit) {
-        this.overdraftLimit = overdraftLimit;
-    }
+  public void setOverdraftLimit(long overdraftLimit) {
+    this.overdraftLimit = overdraftLimit;
+  }
 }

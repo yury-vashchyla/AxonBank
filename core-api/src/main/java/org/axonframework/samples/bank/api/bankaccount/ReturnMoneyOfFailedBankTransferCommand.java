@@ -16,13 +16,32 @@
 
 package org.axonframework.samples.bank.api.bankaccount;
 
-import lombok.Value;
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-@Value
 public class ReturnMoneyOfFailedBankTransferCommand {
 
-    @TargetAggregateIdentifier
-    private String bankAccountId;
-    private long amount;
+  @TargetAggregateIdentifier
+  private String bankAccountId;
+  private long amount;
+
+  public ReturnMoneyOfFailedBankTransferCommand(String bankAccountId, long amount) {
+    this.bankAccountId = bankAccountId;
+    this.amount = amount;
+  }
+
+  public String getBankAccountId() {
+    return bankAccountId;
+  }
+
+  public void setBankAccountId(String bankAccountId) {
+    this.bankAccountId = bankAccountId;
+  }
+
+  public long getAmount() {
+    return amount;
+  }
+
+  public void setAmount(long amount) {
+    this.amount = amount;
+  }
 }

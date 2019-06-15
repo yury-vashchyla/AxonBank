@@ -29,23 +29,23 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    private Environment environment;
+  @Autowired
+  private Environment environment;
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        if (ArrayUtils.contains(environment.getActiveProfiles(), "distributed-command-bus")) {
-            config.enableStompBrokerRelay("/topic")
-                  .setRelayHost("rabbitmq");
-        } else {
-            config.enableSimpleBroker("/topic");
-        }
-        config.setApplicationDestinationPrefixes("/app");
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry config) {
+    if (ArrayUtils.contains(environment.getActiveProfiles(), "distributed-command-bus")) {
+      config.enableStompBrokerRelay("/topic")
+          .setRelayHost("rabbitmq");
+    } else {
+      config.enableSimpleBroker("/topic");
     }
+    config.setApplicationDestinationPrefixes("/app");
+  }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket")
-                .withSockJS();
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/websocket")
+        .withSockJS();
+  }
 }

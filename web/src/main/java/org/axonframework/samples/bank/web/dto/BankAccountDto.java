@@ -16,10 +16,15 @@
 
 package org.axonframework.samples.bank.web.dto;
 
-import lombok.Value;
-
-@Value
 public class BankAccountDto {
 
-    private long overdraftLimit;
+  private long overdraftLimit;
+
+  public long getOverdraftLimit() {
+    return overdraftLimit;
+  }
+
+  public void setOverdraftLimit(long overdraftLimit) {
+    this.overdraftLimit = overdraftLimit;
+  }
 }

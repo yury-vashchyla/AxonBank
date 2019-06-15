@@ -26,36 +26,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class BankTransferEventListener {
 
-    private BankTransferRepository repository;
+  private BankTransferRepository repository;
 
-    @Autowired
-    public BankTransferEventListener(BankTransferRepository repository) {
-        this.repository = repository;
-    }
+  @Autowired
+  public BankTransferEventListener(BankTransferRepository repository) {
+    this.repository = repository;
+  }
 
-    @EventHandler
-    public void on(BankTransferCreatedEvent event) {
-        repository.save(new BankTransferEntry(event.getBankTransferId(),
-                                              event.getSourceBankAccountId(),
-                                              event.getDestinationBankAccountId(),
-                                              event.getAmount()));
-    }
+  @EventHandler
+  public void on(BankTransferCreatedEvent event) {
+    repository.save(new BankTransferEntry(event.getBankTransferId(),
+        event.getSourceBankAccountId(),
+        event.getDestinationBankAccountId(),
+        event.getAmount()));
+  }
 
-    @EventHandler
-    public void on(BankTransferFailedEvent event) {
-        BankTransferEntry bankTransferEntry = repository.findOneByAxonBankTransferId(event.getBankTransferId());
-        bankTransferEntry.setStatus(BankTransferEntry.Status.FAILED);
+  @EventHandler
+  public void on(BankTransferFailedEvent event) {
+    BankTransferEntry bankTransferEntry = repository.findOneByAxonBankTransferId(event.getBankTransferId());
+    bankTransferEntry.setStatus(BankTransferEntry.Status.FAILED);
 
-        repository.save(bankTransferEntry);
-    }
+    repository.save(bankTransferEntry);
+  }
 
-    @EventHandler
-    public void on(BankTransferCompletedEvent event) {
-        BankTransferEntry bankTransferEntry = repository.findOneByAxonBankTransferId(event.getBankTransferId());
-        bankTransferEntry.setStatus(BankTransferEntry.Status.COMPLETED);
+  @EventHandler
+  public void on(BankTransferCompletedEvent event) {
+    BankTransferEntry bankTransferEntry = repository.findOneByAxonBankTransferId(event.getBankTransferId());
+    bankTransferEntry.setStatus(BankTransferEntry.Status.COMPLETED);
 
-        repository.save(bankTransferEntry);
-    }
-
-
+    repository.save(bankTransferEntry);
+  }
 }

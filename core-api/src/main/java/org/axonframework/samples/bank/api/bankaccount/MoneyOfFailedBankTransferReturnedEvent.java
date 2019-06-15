@@ -18,7 +18,7 @@ package org.axonframework.samples.bank.api.bankaccount;
 
 public class MoneyOfFailedBankTransferReturnedEvent extends MoneyAddedEvent {
 
-    public MoneyOfFailedBankTransferReturnedEvent(String bankAccountId, long amountOfMoneyDeposited) {
-        super(bankAccountId, amountOfMoneyDeposited);
-    }
+  public MoneyOfFailedBankTransferReturnedEvent(String bankAccountId, long amountOfMoneyDeposited) {
+    super(bankAccountId, amountOfMoneyDeposited);
+  }
 }

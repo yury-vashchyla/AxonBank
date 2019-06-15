@@ -16,10 +16,19 @@
 
 package org.axonframework.samples.bank.api.bankaccount;
 
-import lombok.Value;
-
-@Value
 public class SourceBankAccountDebitRejectedEvent {
 
-    private String BankTransferId;
+  private String BankTransferId;
+
+  public SourceBankAccountDebitRejectedEvent(String bankTransferId) {
+    BankTransferId = bankTransferId;
+  }
+
+  public String getBankTransferId() {
+    return BankTransferId;
+  }
+
+  public void setBankTransferId(String bankTransferId) {
+    BankTransferId = bankTransferId;
+  }
 }

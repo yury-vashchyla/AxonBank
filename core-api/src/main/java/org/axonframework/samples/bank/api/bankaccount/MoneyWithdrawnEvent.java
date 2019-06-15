@@ -18,7 +18,7 @@ package org.axonframework.samples.bank.api.bankaccount;
 
 public class MoneyWithdrawnEvent extends MoneySubtractedEvent {
 
-    public MoneyWithdrawnEvent(String bankAccountId, long amountOfMoney) {
-        super(bankAccountId, amountOfMoney);
-    }
+  public MoneyWithdrawnEvent(String bankAccountId, long amountOfMoney) {
+    super(bankAccountId, amountOfMoney);
+  }
 }

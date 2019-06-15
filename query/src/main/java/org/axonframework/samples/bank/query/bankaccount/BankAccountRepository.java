@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccountEntry, String> {
 
-    Iterable<BankAccountEntry> findAllByOrderByIdAsc();
-    BankAccountEntry findOneByAxonBankAccountId(String axonBankTransferId);
+  Iterable<BankAccountEntry> findAllByOrderByIdAsc();
+
+  BankAccountEntry findOneByAxonBankAccountId(String axonBankTransferId);
 }

@@ -27,45 +27,44 @@ import org.springframework.stereotype.Component;
 @Component
 public class BankAccountEventListener {
 
-    private BankAccountRepository repository;
-    private SimpMessageSendingOperations messagingTemplate;
+  private BankAccountRepository repository;
+  private SimpMessageSendingOperations messagingTemplate;
 
-    @Autowired
-    public BankAccountEventListener(BankAccountRepository repository, SimpMessageSendingOperations messagingTemplate) {
-        this.repository = repository;
-        this.messagingTemplate = messagingTemplate;
-    }
+  @Autowired
+  public BankAccountEventListener(BankAccountRepository repository, SimpMessageSendingOperations messagingTemplate) {
+    this.repository = repository;
+    this.messagingTemplate = messagingTemplate;
+  }
 
-    @EventHandler
-    public void on(BankAccountCreatedEvent event) {
-        repository.save(new BankAccountEntry(event.getId(), 0, event.getOverdraftLimit()));
+  @EventHandler
+  public void on(BankAccountCreatedEvent event) {
+    repository.save(new BankAccountEntry(event.getId(), 0, event.getOverdraftLimit()));
 
-        broadcastUpdates();
-    }
+    broadcastUpdates();
+  }
 
-    @EventHandler
-    public void on(MoneyAddedEvent event) {
-        BankAccountEntry bankAccountEntry = repository.findOneByAxonBankAccountId(event.getBankAccountId());
-        bankAccountEntry.setBalance(bankAccountEntry.getBalance() + event.getAmount());
+  @EventHandler
+  public void on(MoneyAddedEvent event) {
+    BankAccountEntry bankAccountEntry = repository.findOneByAxonBankAccountId(event.getBankAccountId());
+    bankAccountEntry.setBalance(bankAccountEntry.getBalance() + event.getAmount());
 
-        repository.save(bankAccountEntry);
+    repository.save(bankAccountEntry);
 
-        broadcastUpdates();
-    }
+    broadcastUpdates();
+  }
 
-    @EventHandler
-    public void on(MoneySubtractedEvent event) {
-        BankAccountEntry bankAccountEntry = repository.findOneByAxonBankAccountId(event.getBankAccountId());
-        bankAccountEntry.setBalance(bankAccountEntry.getBalance() - event.getAmount());
+  @EventHandler
+  public void on(MoneySubtractedEvent event) {
+    BankAccountEntry bankAccountEntry = repository.findOneByAxonBankAccountId(event.getBankAccountId());
+    bankAccountEntry.setBalance(bankAccountEntry.getBalance() - event.getAmount());
 
-        repository.save(bankAccountEntry);
+    repository.save(bankAccountEntry);
 
-        broadcastUpdates();
-    }
+    broadcastUpdates();
+  }
 
-    private void broadcastUpdates() {
-        Iterable<BankAccountEntry> bankAccountEntries = repository.findAll();
-        messagingTemplate.convertAndSend("/topic/bank-accounts.updates", bankAccountEntries);
-    }
-
+  private void broadcastUpdates() {
+    Iterable<BankAccountEntry> bankAccountEntries = repository.findAll();
+    messagingTemplate.convertAndSend("/topic/bank-accounts.updates", bankAccountEntries);
+  }
 }

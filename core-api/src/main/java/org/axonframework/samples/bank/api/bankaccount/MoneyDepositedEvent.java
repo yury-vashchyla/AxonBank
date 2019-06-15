@@ -18,7 +18,7 @@ package org.axonframework.samples.bank.api.bankaccount;
 
 public class MoneyDepositedEvent extends MoneyAddedEvent {
 
-    public MoneyDepositedEvent(String id, long amountOfMoneyDeposited) {
-        super(id, amountOfMoneyDeposited);
-    }
+  public MoneyDepositedEvent(String id, long amountOfMoneyDeposited) {
+    super(id, amountOfMoneyDeposited);
+  }
 }
